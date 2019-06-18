@@ -4,6 +4,9 @@
 import gdb
 from subprocess import getoutput
 
+ADDR_DETAIL = True
+SYMBOL_SECTION = False
+
 class CheckSymbol(gdb.Command):
 	def __init__(self):
 		super(self.__class__, self).__init__('checksymbol', gdb.COMMAND_USER)
@@ -22,9 +25,11 @@ class CheckSymbol(gdb.Command):
 			if not line:
 				continue
 			one_line = line.split('\t')
-			addr_detail = getoutput('echo \'' + one_line[0] + '\' | c++filt')
+			addr_detail = getoutput('echo \'' + one_line[0] + '\' | c++filt') if ADDR_DETAIL else one_line[0]
 			symbol_addr = '0x' + ''.join([i.replace('0x', '') for i in one_line[-1:0:-1]])
 			symbol_detail = gdb.execute('info symbol ' + symbol_addr, to_string=True).rstrip('\n')
+			if not SYMBOL_SECTION:
+				symbol_detail = symbol_detail.split(' in section')[0]
 			print(addr_detail, '\t', symbol_addr, '\t', symbol_detail)
 
 CheckSymbol()
