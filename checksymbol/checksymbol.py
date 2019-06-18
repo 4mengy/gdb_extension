@@ -17,7 +17,7 @@ class CheckSymbol(gdb.Command):
 			print('need 2 para, address length')
 			return
 
-		addr = paras[0]
+		addr = gdb.parse_and_eval(paras[0])
 		_len = paras[1]
 
 		raw_out = gdb.execute('x/{}xb {}'.format(_len, addr), to_string=True)
