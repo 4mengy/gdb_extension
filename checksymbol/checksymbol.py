@@ -18,9 +18,8 @@ class CheckSymbol(gdb.Command):
 			return
 
 		addr = gdb.parse_and_eval(paras[0])
-		print('debug info, addr is: {}'.format(addr))
 		_len = gdb.parse_and_eval(paras[1])
-		print('debug info, len is: {}'.format(_len))
+		print('debug info, addr is: {}, len is: {}'.format(addr, _len))
 
 		raw_out = gdb.execute('x/{}xb {}'.format(_len, addr), to_string=True)
 		for line in raw_out.split('\n'):
